@@ -21,12 +21,14 @@ export function AccountMenu() {
   const { data: profile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ['profile'], // IMPORTANTE //,
     queryFn: getProfile,
+    staleTime: Infinity, // Nunca será carregado automáticamente durante um FOCUS //
   })
 
   const { data: managedRestaurant, isLoading: isLoadingManagedRestaurant } =
     useQuery({
       queryKey: ['managed-restaurant'], // IMPORTANTE //,
       queryFn: getManagedRestaurant,
+      staleTime: Infinity, // Nunca será carregado automáticamente durante um FOCUS //
     })
 
   return (

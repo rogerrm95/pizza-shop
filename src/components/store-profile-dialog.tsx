@@ -1,12 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { getManagedRestaurant } from '@/api/get-managed-restaurant'
+import { updateProfile } from '@/api/update-profile'
 
 import { Button } from './ui/button'
 import {
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -28,15 +31,37 @@ export function StoreProfileDialog() {
   const { data: managedRestaurant } = useQuery({
     queryKey: ['managed-restaurant'], // IMPORTANTE //,
     queryFn: getManagedRestaurant,
+    staleTime: Infinity, // Nunca será carregado automáticamente durante um FOCUS //
   })
 
-  const { register, handleSubmit } = useForm<StoreProfileSchema>({
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<StoreProfileSchema>({
     resolver: zodResolver(storeProfileSchema),
     values: {
       name: managedRestaurant?.name ?? '',
       description: managedRestaurant?.description ?? '',
     },
   })
+
+  const { mutateAsync: updateProfileFn } = useMutation({
+    mutationFn: updateProfile,
+  })
+
+  async function handleUpdateProfile(data: StoreProfileSchema) {
+    try {
+      await updateProfileFn({
+        name: data.name,
+        description: data.description,
+      })
+
+      toast.success('Informações atualizadas com sucesso!')
+    } catch {
+      toast.error('Falha durante o processamento, tente novamente !')
+    }
+  }
 
   return (
     <DialogContent>
@@ -47,7 +72,7 @@ export function StoreProfileDialog() {
         </DialogDescription>
       </DialogHeader>
 
-      <form>
+      <form onSubmit={handleSubmit(handleUpdateProfile)}>
         <div className="space-y-4 py-4 ">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right" htmlFor="name">
@@ -67,16 +92,24 @@ export function StoreProfileDialog() {
             />
           </div>
         </div>
-      </form>
 
-      <DialogFooter>
-        <Button className="" variant={'secondary'} type="button">
-          Cancelar
-        </Button>
-        <Button className="" type="submit" variant={'success'}>
-          Salvar
-        </Button>
-      </DialogFooter>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button className="" variant={'secondary'} type="button">
+              Cancelar
+            </Button>
+          </DialogClose>
+
+          <Button
+            className=""
+            type="submit"
+            variant={'success'}
+            disabled={isSubmitting}
+          >
+            Salvar
+          </Button>
+        </DialogFooter>
+      </form>
     </DialogContent>
   )
 }
