@@ -14,7 +14,7 @@ const orderStatusMap: Record<OrderStatus, string> = {
   canceled: 'Cancelado',
   delivered: 'Entregue',
   delivering: 'Em preparo',
-  processing: 'Em Processo',
+  processing: 'Em processo',
 }
 
 export function OrderStatus({ status }: OrderStatusProps) {
@@ -30,10 +30,6 @@ export function OrderStatus({ status }: OrderStatusProps) {
 
       {status === 'delivered' && (
         <span className="h-2 w-2 rounded-full bg-emerald-500" />
-      )}
-
-      {status === 'delivering' && (
-        <span className="h-2 w-2 rounded-full bg-slate-400" />
       )}
 
       {['delivering', 'processing'].includes(status) && (
