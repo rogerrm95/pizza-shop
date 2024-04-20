@@ -1,14 +1,25 @@
+import { formatDistanceToNow } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { ArrowRight, Search, X } from 'lucide-react'
 
+import { OrderStatus } from '@/components/order-status'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { TableCell, TableRow } from '@/components/ui/table'
 
 import { OrderDetails } from './order-details'
 
-export interface OrderTableRowProps {}
+export interface OrderTableRowProps {
+  order: {
+    orderId: string
+    createdAt: string
+    status: 'pending' | 'canceled' | 'processing' | 'delivering' | 'delivered'
+    customerName: string
+    total: number
+  }
+}
 
-export function OrderTableRow() {
+export function OrderTableRow({ order }: OrderTableRowProps) {
   return (
     <TableRow>
       {/* COLUNA - DETALHES DO PEDIDO */}
@@ -28,24 +39,33 @@ export function OrderTableRow() {
       </TableCell>
 
       {/* COLUNA - ID */}
-      <TableCell className="font-mono text-sm font-medium">ORD-1</TableCell>
+      <TableCell className="font-mono text-sm font-medium">
+        {order.orderId}
+      </TableCell>
 
       {/* COLUNA - REALIZADO HÁ */}
-      <TableCell className="text-muted-foreground">Há 15 minutos</TableCell>
+      <TableCell className="text-muted-foreground">
+        {formatDistanceToNow(order.createdAt, {
+          locale: ptBR,
+          addSuffix: true,
+        })}
+      </TableCell>
 
       {/* COLUNA - STATUS */}
       <TableCell>
-        <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-slate-400" />
-          <span className="font-medium text-muted-foreground">Pendente</span>
-        </div>
+        <OrderStatus status={order.status} />
       </TableCell>
 
       {/* COLUNA - CLIENTE */}
-      <TableCell className="font-medium">Ana Paula Marques</TableCell>
+      <TableCell className="font-medium">{order.customerName}</TableCell>
 
       {/* COLUNA - TOTAL DO PEDIDO */}
-      <TableCell className="font-medium">R$ 200,00</TableCell>
+      <TableCell className="font-medium">
+        {order.total.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        })}
+      </TableCell>
 
       {/* COLUNA - PRÓXIMA AÇÃO */}
       <TableCell>
