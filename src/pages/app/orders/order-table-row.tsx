@@ -64,7 +64,7 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
 
       {/* COLUNA - TOTAL DO PEDIDO */}
       <TableCell className="font-medium">
-        {order.total.toLocaleString('pt-BR', {
+        {(order.total / 100).toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         })}
