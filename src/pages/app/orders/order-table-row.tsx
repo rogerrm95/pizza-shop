@@ -3,6 +3,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ArrowRight, Search, X } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 import { cancelOrder } from '@/api/cancel-order'
 import { GetOrdersResponse } from '@/api/get-orders'
@@ -50,6 +51,10 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
             return order
           }),
         })
+      })
+
+      toast.success(`Pedido: ${orderId}`, {
+        description: `Pedido cancelado com sucesso!`,
       })
     },
   })
@@ -116,6 +121,7 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
           size={'xs'}
           disabled={!['pending', 'processing'].includes(order.status)}
           onClick={() => cancelOrderFn({ orderId: order.orderId })}
+          className="hover:bg-rose-900 hover:text-rose-50"
         >
           <X className="mr-2 h-3 w-3" />
           Cancelar
