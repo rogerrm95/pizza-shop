@@ -1,7 +1,7 @@
 import { api } from '@/lib/axios'
 
 export interface GetMonthRevenueResponse {
-  amount: number
+  receipt: number
   diffFromLastMonth: number
 }
 
@@ -10,5 +10,7 @@ export async function getMonthRevenue() {
     '/metrics/month-receipt',
   )
 
-  return response.data
+  const { receipt: amount, diffFromLastMonth } = response.data
+
+  return { amount, diffFromLastMonth }
 }
