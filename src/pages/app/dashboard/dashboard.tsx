@@ -8,7 +8,6 @@ import { PopularProductsCharts } from './popular-products.chart'
 import { RevenueChart } from './revenue-chart'
 
 export function Dashboard() {
-  throw new Error('Erro no gráfico')
   return (
     <div>
       <Helmet title="Dashboard" />
