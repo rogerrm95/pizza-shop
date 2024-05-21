@@ -1,9 +1,21 @@
 import { http, HttpResponse } from 'msw'
 
-export const signInMock = http.post('/authenticate', () => {
-  const response = new HttpResponse(null, { status: 401 })
+import { SignInBody } from '../sign-in'
 
-  console.log(response)
+export const signInMock = http.post<never, SignInBody>(
+  '/authenticate',
+  async ({ request }) => {
+    const { email } = await request.json()
 
-  return response
-})
+    if (email === 'rogerrm2014@gmail.com') {
+      return new HttpResponse(null, {
+        status: 200,
+        headers: {
+          'Set-Cookie': 'auth=sample-jwt',
+        },
+      })
+    }
+
+    return new HttpResponse(null, { status: 401 })
+  },
+)
