@@ -10,11 +10,11 @@ export default defineConfig({
   // reporter: 'html',
   use: {
     // trace: 'on-first-retry',
-    baseURL: 'http://localhost:50999',
+    baseURL: 'http://localhost:509',
   },
   webServer: {
     command: 'npm run dev:test',
-    url: 'http://localhost:50999',
+    url: 'http://localhost:509',
     reuseExistingServer: !process.env.CI,
   },
   // projects: [
